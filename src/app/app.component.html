@@ -1,12 +1,13 @@
 <div class="shell-grid">
-    <div class="shell" 
-      #shellOne
-      draggable="true"
-      (dragstart)="getCoordinates($event)"
-      (dragover)="dragShell($event)"
-      (drop)="endMove()"
-      ></div>
-    <!-- <div class="shell"></div>
-    <div class="shell"></div> -->
-    <div class="ball"></div>
+    <div class="shell"
+        cdkDragBoundary=".shell-grid"
+        (cdkDragStarted)="getCoordinates($event)"
+        (cdkDragEnded)="dragShell($event)"
+        *ngFor="let shell of listOfShells" 
+        cdkDrag 
+        [cdkDragFreeDragPosition]="dragPosition"
+        [cdkDragDisabled]="shell.disabled"
+        ></div>
+
+    <div #ballElement class="ball"></div>
 </div>
