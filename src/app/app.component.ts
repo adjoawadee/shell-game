@@ -32,12 +32,6 @@ export class AppComponent implements OnInit, AfterViewInit{
     { value:'shell-three', disabled: false }
   ]
 
-  public dropAreaData = [
-    { value: 'ball',
-      disabled: true
-    }
-  ]
-
   public dragPosition = {
     x: 0,
     y: 0
@@ -80,26 +74,42 @@ export class AppComponent implements OnInit, AfterViewInit{
     }
   }
 
+  animateShellUp() {
+    this.renderer.addClass(this.currentShell, 'down-up');
+  }
+
+  shuffelShell(shell: HTMLElement, index: string) {
+    this.renderer.addClass(shell, `shuffel-${index}`);
+  }
+
+  undoShuffelShells(shell: HTMLElement, index: string) {
+    this.renderer.removeClass(shell, `shuffel-${index}`);
+    this.renderer.setStyle(shell, 'top', '0')
+    this.renderer.setStyle(shell, 'left', '0')
+  }
+
+  changeBallColor(color: string) {
+    this.renderer.setStyle(this.ballElement.nativeElement, 'background-color', color);
+  }
+
   play() {
     this.played = true;
     this.disableButton = true;
     this.listOfShells.forEach(shell => {
       shell.disabled=true;
     });
-    this.renderer.setStyle(this.ballElement.nativeElement, 'background-color', 'transparent');
-    this.renderer.addClass(this.currentShell, 'down-up');
+    this.changeBallColor('transparent');
+    this.animateShellUp();
 
     this.currentShell.addEventListener('animationend', () => {
       for (const [index, shell] of Object.entries(this.shellElements)) {
-         this.renderer.addClass(shell, `shuffel-${index}`);
+         this.shuffelShell(shell, index);
       }
     });
 
     this.shellElements[2].addEventListener('animationend', () => {
       for (const [index, shell] of Object.entries(this.shellElements)) {
-        this.renderer.removeClass(shell, `shuffel-${index}`);
-        this.renderer.setStyle(shell, 'top', '0')
-        this.renderer.setStyle(shell, 'left', '0')
+        this.undoShuffelShells(shell, index)
       }
 
       this.listOfShells.forEach(shell => {
@@ -122,7 +132,8 @@ export class AppComponent implements OnInit, AfterViewInit{
           y: newBallPositionTop
         }
 
-        this.renderer.setStyle(this.ballElement.nativeElement, 'background-color', '#F2BA52');
+        this.changeBallColor('#F2BA52');
+
         this.renderer.setStyle(this.ballElement.nativeElement, 'top', `-${newBallPositionTop}px`);
         this.renderer.setStyle(this.ballElement.nativeElement, 'left', `${newBallPositionLeft}px`);
     })

@@ -1,8 +1,22 @@
-import { TestBed } from '@angular/core/testing';
+import { ElementRef } from '@angular/core';
+import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { By } from '@angular/platform-browser';
 import { RouterTestingModule } from '@angular/router/testing';
 import { AppComponent } from './app.component';
 
+const LIST_OF_SHELLS = [
+  {value:'shell-one', disabled: false},
+  {value:'shell-two', disabled: false},
+  {value:'shell-three', disabled: false}
+]
+
+
+
 describe('AppComponent', () => {
+  let fixture: ComponentFixture<AppComponent>;
+  let app: AppComponent;
+  let htmlEl: HTMLElement;
+
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       imports: [
@@ -12,24 +26,28 @@ describe('AppComponent', () => {
         AppComponent
       ],
     }).compileComponents();
+
+    fixture = TestBed.createComponent(AppComponent);
+    app = fixture.componentInstance;
   });
 
   it('should create the app', () => {
-    const fixture = TestBed.createComponent(AppComponent);
-    const app = fixture.componentInstance;
     expect(app).toBeTruthy();
   });
 
   it(`should have as title 'shell-game'`, () => {
-    const fixture = TestBed.createComponent(AppComponent);
-    const app = fixture.componentInstance;
     expect(app.title).toEqual('shell-game');
   });
 
-  it('should render title', () => {
-    const fixture = TestBed.createComponent(AppComponent);
-    fixture.detectChanges();
-    const compiled = fixture.nativeElement as HTMLElement;
-    expect(compiled.querySelector('.content span')?.textContent).toContain('shell-game app is running!');
+  it('should have three shells', () => {
+    expect(app.listOfShells).toEqual(LIST_OF_SHELLS);
   });
+
+  it('should call reavealBall function', () => {
+    fixture.detectChanges();
+    spyOn(app, 'revealBall').and.callThrough();
+    htmlEl = fixture.debugElement.nativeElement.querySelector('shell');
+    htmlEl.click;
+    expect(app.revealBall).toHaveBeenCalled();
+  })
 });
