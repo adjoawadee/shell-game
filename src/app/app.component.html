@@ -1,13 +1,26 @@
+<div class="instructions">
+  <ol>
+    <li>Drag a shell on the ball</li>
+    <li>Press Play</li>
+    <li>Wait for the shuffel</li>
+    <li>Guess which shell the ball</li>
+  </ol>
+</div>
 <div class="shell-grid">
+  <h1 class="header">Game Of Shells</h1>
     <div class="shell"
+        (click)="revealBall($event)"
         cdkDragBoundary=".shell-grid"
         (cdkDragStarted)="getCoordinates($event)"
-        (cdkDragEnded)="dragShell($event)"
-        *ngFor="let shell of listOfShells" 
+        (cdkDragEnded)="dragShell()"
+        *ngFor="let shell of listOfShells; let i = index" 
         cdkDrag 
         [cdkDragFreeDragPosition]="dragPosition"
         [cdkDragDisabled]="shell.disabled"
+        class="shell-{{i}}"
         ></div>
 
     <div #ballElement class="ball"></div>
+
+    <button [disabled]="disableButton" class="play-button" (click)="play()" mat-raised-button color="primary">{{buttonText}}</button>
 </div>
